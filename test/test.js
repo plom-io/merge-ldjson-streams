@@ -39,7 +39,7 @@ function makeStreams(datalist){
 describe('merge', function(){
 
   var data1 = [
-    {a: 1, b: 2, c: 3},
+    {a: 1, b: 2, c: 3, z: {a:1000}},
     {a: 4, b: 5, c: 6},
     {a: 7, b: 8, c: 9},
     {a: 10, b: 11, c: 12},
@@ -49,7 +49,7 @@ describe('merge', function(){
   ];
 
   var data2 = [
-    {d: 1, e: 2, f: 3},
+    {d: 1, e: 2, f: 3, z: {a:1}},
     {d: 4, e: 5, f: 6},
     {d: 7, e: 8, f: 9},
     {d: 10, e: 11, f: 12},
@@ -59,19 +59,19 @@ describe('merge', function(){
   ];
 
   var data3 = [
-    {f: 77, g: 78},
+    {f: 77, g: 78, z: {a:10,b:10}},
     {f: 79, g: 80},
     {f: 81, g: 82}
   ];
 
   var data4 = [
-    {h: 1000}
+    {h: 1000, z: {c:10}}
   ];
     
   it('should merge streams of the same length', function(done){
 
     var expected = [
-      { a: 1, b: 2, c: 3, d: 1, e: 2, f: 3 },
+      { a: 1, b: 2, c: 3, d: 1, e: 2, f: 3, z: {a:1} },
       { a: 4, b: 5, c: 6, d: 4, e: 5, f: 6 },
       { a: 7, b: 8, c: 9, d: 7, e: 8, f: 9 },
       { a: 10, b: 11, c: 12, d: 10, e: 11, f: 12 },
@@ -95,7 +95,7 @@ describe('merge', function(){
   it('should merge streams of different length', function(done){
 
     var expected = [
-      { a: 1, b: 2, c: 3, d: 1, e: 2, f: 77, g: 78, h: 1000 },
+      { a: 1, b: 2, c: 3, d: 1, e: 2, f: 77, g: 78, h: 1000, z: {a:10,b:10,c:10} },
       { a: 4, b: 5, c: 6, d: 4, e: 5, f: 79, g: 80 },
       { a: 7, b: 8, c: 9, d: 7, e: 8, f: 81, g: 82 },
       { a: 10, b: 11, c: 12, d: 10, e: 11, f: 12 },
@@ -106,7 +106,7 @@ describe('merge', function(){
 
     var cnt = 0;
 
-    var m = new Mos(makeStreams([data1, data2, data3, data4]));
+    var m = new Mos(makeStreams([data1, data2, data3, data4]), {deep:true});
 
     m.on('data', function(row){
       assert.deepEqual(row, expected[cnt++]);

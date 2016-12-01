@@ -11,7 +11,7 @@ Usage
 
     var Mos = require('merge-object-streams');
 
-    var mergedStream = new Mos([ldjsonStream1, ldjsonStream2], options);
+    var mergedStream = new Mos([ldjsonStream1, ldjsonStream2], options); //options.deep is available for deep-extend merge strategy
     mergedStream.on('data', function(mergedRow){
       console.log(mergedRow);
     });
