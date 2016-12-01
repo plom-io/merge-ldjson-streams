@@ -1,5 +1,6 @@
 var fs = require('fs')
   , path = require('path')
+  , deepExtend = require('deep-extend')
   , Readable = require('stream').Readable
   , util = require('util');
 
@@ -33,7 +34,7 @@ function MergeObjectStreams(sources, options) {
       that._flowedIds.push(s.mergedId);
 
       if(that._cnt >= that._nFlowing){
-        that.pushMerge();
+        that.pushMerge(options.deep);
       }
     });
 
@@ -46,12 +47,12 @@ function MergeObjectStreams(sources, options) {
       that._cntEnd++;
 
       if( that._cnt && (that._flowedIds.indexOf(s.mergedId) === -1) && (that._cnt == that._nFlowing) ){
-        that.pushMerge();
+        that.pushMerge(options.deep);
       }
 
       if(that._cntEnd === that._sources.length){
         if(that._cnt){
-          that.pushMerge();
+          that.pushMerge(options.deep);
         }
         that.push(null);
       }
@@ -71,14 +72,18 @@ MergeObjectStreams.prototype._read = function() {
   }
 };
 
-MergeObjectStreams.prototype.pushMerge = function(){
+MergeObjectStreams.prototype.pushMerge = function(deep){
   this._cnt = 0;
 
   var merged = {};
   this._tmps.forEach(function(ob, i){
-    for(var key in ob){
-      merged[key] = ob[key];
-    }
+  	if(deep){
+  	  deepExtend(merged, ob);
+  	}else{	
+	  for(var key in ob){
+	    merged[key] = ob[key];
+	  }
+  	}
     this._tmps[i] = {};
   }, this);
 

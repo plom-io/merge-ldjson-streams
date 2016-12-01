@@ -27,5 +27,8 @@
   },
   "devDependencies": {
     "mocha": "~1.13.0"
+  },
+  "dependencies": {
+    "deep-extend": "^0.4.1"
   }
 }
